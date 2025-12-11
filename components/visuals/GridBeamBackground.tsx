@@ -81,7 +81,7 @@ extend({ ColorShiftMaterial });
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      colorShiftMaterial: ReactThreeFiber.Object3DNode<THREE.ShaderMaterial, typeof ColorShiftMaterial>;
+      colorShiftMaterial: any;
     }
   }
 }
