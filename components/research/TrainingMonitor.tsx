@@ -28,9 +28,11 @@ const generateData = (step: number) => {
   };
 };
 
+type LogEntry = string | { text: string; color: string };
+
 export default function TrainingMonitor() {
   const [data, setData] = useState<any[]>([]);
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const logContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
