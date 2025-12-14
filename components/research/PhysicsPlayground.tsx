@@ -41,6 +41,7 @@ export default function PhysicsPlayground() {
       { label: "慢性指数", count: 1800, color: "#f59e0b" },
       { label: "完全缓解", count: 650, color: "#8b5cf6" },
       { label: "部分缓解", count: 430, color: "#ec4899" },
+      { label: "未缓解", count: 120, color: "#ef4444" },
       { label: "足细胞", count: 3200, color: "#6366f1" },
       { label: "新月体", count: 540, color: "#0ea5e9" },
       { label: "免疫复合物", count: 980, color: "#f97316" }

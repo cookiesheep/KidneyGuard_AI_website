@@ -107,7 +107,7 @@ export default function TrainingWizard({ onStart }: WizardProps) {
                 <p className="text-zinc-400 mt-2 text-sm">
                   支持 CSV 索引文件或 ZIP 压缩包
                   <br />
-                  <span className="text-orange-400 text-xs mt-2 block">⚠️ 推荐使用 PASM 染色切片以获得最佳效果</span>
+                  <span className="text-orange-400 text-xs mt-2 block">⚠️ 推荐使用 PAS 染色切片以获得最佳效果</span>
                 </p>
               </div>
               <div className="mt-6 flex gap-4 text-sm text-zinc-500">

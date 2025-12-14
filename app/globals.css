@@ -13,8 +13,8 @@
     100% {
       offset-distance: 100%;
     }
-  }
-  
+}
+
   @keyframes spotlight {
     0% {
       opacity: 0;
@@ -32,7 +32,7 @@
   直接写全局样式即可 
 */
 
-:root {
+  :root {
   --background: #020617;
   --foreground: #fafafa;
 }

@@ -1,11 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { ZoomIn, ZoomOut, Maximize, Eye, EyeOff, Layers, MousePointerClick, Copy, Trash2 } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize, Eye, EyeOff, Layers, MousePointerClick, Copy, Trash2, Loader2 } from "lucide-react";
 import { Glomerulus, GLOMERULUS_TYPES } from "@/lib/mock-data";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+
+// 全局坐标偏移量修正 (百分比)
+// 如果框整体向左偏，尝试增加 OFFSET_X (例如 2.5)
+// 如果框整体向上偏，尝试增加 OFFSET_Y
+const OFFSET_X = 0; 
+const OFFSET_Y = 0;
 
 interface ViewerProps {
   imageUrl: string;
@@ -17,14 +23,22 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   
+  // 图片加载状态管理
+  const [isLoading, setIsLoading] = useState(true);
+  
   // 调试模式状态
   const [debugMode, setDebugMode] = useState(false);
   // 记录点击的点
   const [recordedPoints, setRecordedPoints] = useState<Glomerulus[]>([]);
 
+  // 监听图片 URL 变化，重置加载状态
+  useEffect(() => {
+    setIsLoading(true);
+  }, [imageUrl]);
+
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (!debugMode) return;
-      
+      // ... (之前的逻辑保持不变)
       // 计算相对于图片的百分比坐标
       const rect = e.currentTarget.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -34,15 +48,16 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
           id: `rec-${Date.now()}`,
           x: x,
           y: y,
-          width: 5, // 默认大小，之后可微调
+          width: 5,
           height: 5,
-          type: 'cellular', // 默认类型
+          type: 'cellular',
           confidence: 0.95
       };
       
       setRecordedPoints(prev => [...prev, newPoint]);
   };
-
+  
+  // ... (copyToClipboard 保持不变)
   const copyToClipboard = () => {
       const jsonString = JSON.stringify(recordedPoints.map(p => ({
           id: p.id,
@@ -60,8 +75,23 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl group">
+      {/* 加载遮罩 */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-900/80 backdrop-blur-sm"
+          >
+             <Loader2 className="h-10 w-10 text-blue-500 animate-spin mb-4" />
+             <p className="text-zinc-400 text-sm font-mono animate-pulse">加载高分辨率影像...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 顶部工具栏 */}
       <div className="absolute top-4 left-4 z-20 flex gap-2 rounded-lg bg-black/60 p-1.5 backdrop-blur-md border border-white/10">
+        {/* ... (按钮代码保持不变) ... */}
         <button 
           onClick={() => setShowAnnotations(!showAnnotations)}
           className={cn(
@@ -128,7 +158,8 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
         minScale={0.5}
         maxScale={8}
         centerOnInit
-        wheel={{ step: 0.1 }}
+        wheel={{ step: 0.2 }} // 增加滚轮步长，减少触发频率
+        panning={{ velocityDisabled: true }} // 禁用惯性滑动，减少计算开销
         // Debug 模式下禁用平移，防止误触
         disabled={debugMode} 
       >
@@ -140,18 +171,41 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
               <button onClick={() => resetTransform()} className="p-2 rounded-md hover:bg-white/20 text-white"><Maximize className="h-4 w-4" /></button>
             </div>
 
-            <TransformComponent wrapperClass="!h-full !w-full" contentClass="!h-full !w-full">
+            <TransformComponent wrapperClass="!h-full !w-full" contentClass="!h-full !w-full !flex !items-center !justify-center">
               <div 
                   className={cn(
-                      "relative h-full w-full flex items-center justify-center",
+                      "relative inline-block",
                       debugMode && "cursor-crosshair"
                   )}
                   onClick={handleImageClick}
               >
+                {/* 
+                   渐进式加载策略：
+                   1. img 标签设置 opacity，直到 onLoad 触发。
+                   2. 加载期间显示上方的 Loading 遮罩。
+                   3. 使用 loading="eager" 确保进入视口时立即请求。
+                */}
                 <img 
                   src={imageUrl} 
                   alt="Biopsy Slide" 
-                  className="max-h-full max-w-full object-contain shadow-2xl" 
+                  loading="eager"
+                  // 尝试禁用解码优化，防止大图解码失败
+                  decoding="sync"
+                  onLoad={() => setIsLoading(false)}
+                  onError={(e) => {
+                    console.error("Image load error:", imageUrl);
+                    // 尝试重新加载一次，或者显示错误提示
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('retry')) {
+                        // 简单的重试逻辑：添加时间戳
+                        // target.src = imageUrl + '?retry=' + Date.now();
+                    }
+                    setIsLoading(false); 
+                  }}
+                  className={cn(
+                    "block h-auto w-auto max-h-[85vh] max-w-[85vw] shadow-2xl transition-opacity duration-700",
+                    isLoading ? "opacity-0" : "opacity-100"
+                  )}
                 />
                 
                 {/* 临时显示的录制点 */}
@@ -178,7 +232,7 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
                 </AnimatePresence>
 
                 <AnimatePresence>
-                  {!debugMode && showAnnotations && (
+                  {!debugMode && showAnnotations && !isLoading && (
                     <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -186,7 +240,8 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
                       className="absolute inset-0"
                     >
                       {annotations.map((anno) => {
-                        const style = GLOMERULUS_TYPES[anno.type];
+                        // @ts-ignore - crescents is now a valid type
+                        const style = GLOMERULUS_TYPES[anno.type] || GLOMERULUS_TYPES.cellular;
                         const isHovered = hoveredId === anno.id;
 
                         return (
@@ -196,14 +251,16 @@ export default function PathologyViewer({ imageUrl, annotations }: ViewerProps) 
                                 "absolute cursor-pointer transition-all duration-200"
                             )}
                             style={{
-                              left: `${anno.x}%`,
-                              top: `${anno.y}%`,
+                              // 应用偏移量修正
+                              left: `${anno.x + OFFSET_X}%`,
+                              top: `${anno.y + OFFSET_Y}%`,
                               width: `${anno.width}%`,
                               height: `${anno.height}%`,
-                              borderColor: isHovered ? style.color : 'transparent', 
-                              borderWidth: isHovered ? '2px' : '0px',
+                              // 默认显示边框，而不仅仅是悬停时
+                              border: `2px solid ${style.color}`,
                               backgroundColor: isHovered ? style.bg : 'transparent',
-                              boxShadow: isHovered ? `0 0 15px ${style.color}` : 'none'
+                              boxShadow: isHovered ? `0 0 15px ${style.color}` : 'none',
+                              zIndex: isHovered ? 50 : 10
                             }}
                             onMouseEnter={() => setHoveredId(anno.id)}
                             onMouseLeave={() => setHoveredId(null)}

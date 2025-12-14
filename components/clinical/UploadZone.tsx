@@ -133,7 +133,7 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
               <div className="flex flex-col gap-3 w-full max-w-xs items-center">
                   <div className="flex items-center gap-2 rounded-full bg-orange-500/10 px-4 py-2 text-xs font-medium text-orange-300 border border-orange-500/20">
                     <AlertCircle className="h-3.5 w-3.5" />
-                    <span>仅支持 PASM 染色</span>
+                    <span>仅支持 PAS 染色</span>
                   </div>
 
                   <button 

@@ -243,6 +243,21 @@ export default function Home() {
                     />
                     </div>
                 </div>
+
+                <div className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                    <span className="text-zinc-400">未缓解概率</span>
+                    <span className="text-red-400 font-mono text-lg">2%</span>
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
+                    <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "2%" }}
+                        transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+                        className="h-full bg-red-500"
+                    />
+                    </div>
+                </div>
                 
                 <div className="mt-8 pt-8 border-t border-white/5">
                     <div className="text-4xl font-mono text-white tracking-tight">IV型 <span className="text-base font-normal text-zinc-500 ml-2">(弥漫增生性)</span></div>
@@ -355,6 +370,6 @@ export default function Home() {
         fileName="demo_slide_pasm.svs"
       />
       
-    </main>
+      </main>
   );
 }
