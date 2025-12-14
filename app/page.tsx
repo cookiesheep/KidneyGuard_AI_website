@@ -11,7 +11,7 @@ import ClinicalDashboard from "@/components/clinical/ClinicalDashboard";
 import ResearchDashboard from "@/components/research/ResearchDashboard"; // 新增
 import ReportModal from "@/components/clinical/ReportModal";
 import { ArrowRight, Microscope, BarChart3, BrainCircuit, Activity, Database, FlaskConical } from "lucide-react";
-import { useLenis } from "@studio-freight/react-lenis";
+import { useLenis } from "lenis/react";
 
 const staggerContainer = {
   hidden: { opacity: 0 },
