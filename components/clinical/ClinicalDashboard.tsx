@@ -205,27 +205,27 @@ export default function ClinicalDashboard({ imageFile, onBack }: DashboardProps)
               <div className="space-y-4 rounded-xl border border-white/5 bg-zinc-800/30 p-5">
                  <div className="flex justify-between text-sm mb-1">
                    <span className="text-zinc-400">完全缓解 (CR)</span>
-                   <span className="text-green-400 font-mono">87%</span>
+                   <span className="text-green-400 font-mono">32.1%</span>
                  </div>
                  <div className="h-2 w-full rounded-full bg-zinc-900">
-                   <div className="h-full rounded-full bg-green-500 w-[87%] shadow-[0_0_10px_rgba(34,197,94,0.4)]"></div>
+                   <div className="h-full rounded-full bg-green-500 w-[32.1%] shadow-[0_0_10px_rgba(34,197,94,0.4)]"></div>
                  </div>
 
                  <div className="flex justify-between text-sm mb-1 pt-2">
                    <span className="text-zinc-400">部分缓解 (PR)</span>
-                   <span className="text-yellow-400 font-mono">11%</span>
+                   <span className="text-yellow-400 font-mono">54.5%</span>
                  </div>
                  <div className="h-2 w-full rounded-full bg-zinc-900">
-                   <div className="h-full rounded-full bg-yellow-500 w-[11%]"></div>
+                   <div className="h-full rounded-full bg-yellow-500 w-[54.5%]"></div>
                  </div>
 
                  {/* 新增：未缓解 */}
                  <div className="flex justify-between text-sm mb-1 pt-2">
                    <span className="text-zinc-400">未缓解 (NR)</span>
-                   <span className="text-red-400 font-mono">2%</span>
+                   <span className="text-red-400 font-mono">13.4%</span>
                  </div>
                  <div className="h-2 w-full rounded-full bg-zinc-900">
-                   <div className="h-full rounded-full bg-red-500 w-[2%]"></div>
+                   <div className="h-full rounded-full bg-red-500 w-[13.4%]"></div>
                  </div>
               </div>
             </div>

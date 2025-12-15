@@ -119,7 +119,7 @@ export default function Home() {
           >
             <motion.span variants={staggerItem} className="block">DeepScope</motion.span>
             <motion.span variants={staggerItem} className="block text-4xl sm:text-6xl md:text-7xl mt-6 font-light text-blue-100/50 tracking-wide">
-              液态智能 · 洞见微观
+              智能病理 · 洞见微观
             </motion.span>
           </motion.h1>
 
@@ -129,9 +129,9 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.8 }}
             className="mt-12 max-w-2xl text-lg text-zinc-400 sm:text-xl font-light leading-relaxed"
           >
-            基于 <span className="text-blue-400 font-semibold">MAE-ViT</span> 与液态神经网络的下一代狼疮肾炎诊断平台。
+            基于 <span className="text-blue-400 font-semibold">多模态深度学习</span> 的狼疮肾炎智能辅助诊疗与科研平台。
             <br />
-            将纳米级病理特征转化为精准的临床预后指标。
+            将临床数据与病理图像特征转换为精确的临床诊断与预后指标。
           </motion.p>
 
           <motion.div
@@ -217,12 +217,12 @@ export default function Home() {
                 <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                     <span className="text-zinc-400">完全缓解概率</span>
-                    <span className="text-green-400 font-mono text-lg">87%</span>
+                    <span className="text-green-400 font-mono text-lg">32.1%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
                     <motion.div 
                         initial={{ width: 0 }}
-                        whileInView={{ width: "87%" }}
+                        whileInView={{ width: "32.1%" }}
                         transition={{ duration: 1.5, ease: "easeOut" }}
                         className="h-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
                     />
@@ -232,12 +232,12 @@ export default function Home() {
                 <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                     <span className="text-zinc-400">部分缓解概率</span>
-                    <span className="text-yellow-400 font-mono text-lg">11%</span>
+                    <span className="text-yellow-400 font-mono text-lg">54.5%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
                     <motion.div 
                         initial={{ width: 0 }}
-                        whileInView={{ width: "11%" }}
+                        whileInView={{ width: "54.5%" }}
                         transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
                         className="h-full bg-yellow-500"
                     />
@@ -247,12 +247,12 @@ export default function Home() {
                 <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                     <span className="text-zinc-400">未缓解概率</span>
-                    <span className="text-red-400 font-mono text-lg">2%</span>
+                    <span className="text-red-400 font-mono text-lg">13.4%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-zinc-800 overflow-hidden">
                     <motion.div 
                         initial={{ width: 0 }}
-                        whileInView={{ width: "2%" }}
+                        whileInView={{ width: "13.4%" }}
                         transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
                         className="h-full bg-red-500"
                     />
