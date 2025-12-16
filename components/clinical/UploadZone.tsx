@@ -15,7 +15,7 @@ interface UploadZoneProps {
 
 export default function UploadZone({ onOpenReport }: UploadZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<UploadStatus>("idle");
   const [progress, setProgress] = useState(0);
 
@@ -25,7 +25,7 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
     setProgress(0);
     
     if (demoMode) {
-        setFile(new File([""], "demo_slide_pasm.svs", { type: "image/tiff" }));
+        setFiles([new File([""], "demo_slide_pasm.svs", { type: "image/tiff" })]);
     }
     
     // 模拟上传进度
@@ -60,15 +60,15 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
     e.preventDefault();
     setIsDragging(false);
     
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFiles(Array.from(e.dataTransfer.files));
       simulateProcess();
     }
   }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setFiles(Array.from(e.target.files));
       simulateProcess();
     }
   };
@@ -80,7 +80,7 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
 
   const reset = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFile(null);
+    setFiles([]);
     setStatus("idle");
     setProgress(0);
   };
@@ -125,9 +125,9 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
               </h3>
               
               <p className="mb-8 max-w-xs text-sm text-zinc-400 leading-relaxed">
-                拖拽 .svs 或 .tif 文件至此
+                拖拽 .svs, .tif 或表格文件至此
                 <br />
-                或点击浏览本地文件
+                支持多文件批量上传
               </p>
 
               <div className="flex flex-col gap-3 w-full max-w-xs items-center">
@@ -141,7 +141,7 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
                     className="flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 px-4 py-2 text-xs font-medium text-blue-300 transition-colors border border-blue-500/20 z-20"
                   >
                     <PlayCircle className="h-3.5 w-3.5" />
-                    <span>我是评委，没有数据 (一键演示)</span>
+                    <span> (一键演示)</span>
                   </button>
               </div>
             </motion.div>
@@ -196,7 +196,11 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
                </div>
                
                <h3 className="text-2xl font-bold text-white mb-2">分析完成</h3>
-               <p className="text-zinc-400 mb-8 font-mono text-sm">{file?.name}</p>
+               <div className="text-zinc-400 mb-8 font-mono text-sm flex flex-col gap-1 items-center">
+                  {files.map((f, i) => (
+                      <span key={i}>{f.name}</span>
+                  ))}
+               </div>
                
                <div className="flex gap-4">
                  <button 
@@ -219,6 +223,7 @@ export default function UploadZone({ onOpenReport }: UploadZoneProps) {
         <input 
           id="file-upload"
           type="file" 
+          multiple
           className="hidden" 
           onChange={handleFileSelect}
         />
